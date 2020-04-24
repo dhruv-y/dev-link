@@ -10,7 +10,7 @@ const config = require('config')
 // @router      POST api/users
 // @desc        Register User
 // @access      Public
-router.post('/api/users'
+router.post('/'
     , [check('name', 'Name is required!').not().isEmpty(),
     check('email', 'Include a valid email').isEmail(),
     check('password', 'Enter a password with 5 or more characters').isPassword().isLength({ min: 5 })]
@@ -28,7 +28,7 @@ router.post('/api/users'
             let user = await User.findOne({ email })
 
             if (user) {
-                res.status(400).send({ errors: [{ msg: 'User exists!' }] })
+                return res.status(400).json({ errors: [{ msg: 'User exists!' }] })
             }
 
             const avatar = gravatar.url(email, {
