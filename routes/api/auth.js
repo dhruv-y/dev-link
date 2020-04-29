@@ -30,7 +30,7 @@ router.get('/', auth, async (req, res) => {
 router.post('/'
     , [
         check('email', 'Enter valid email!').isEmail(),
-        check('password', 'Password required!').isPassword().exists()]
+        check('password', 'Password required!').exists()]
     , async (req, res) => {
         // Check errors from validation result
         const errors = validationResult(req)
@@ -50,7 +50,7 @@ router.post('/'
             // Match passwords
             const isMatch = await brcrypt.compare(password, user.password)
             if (!isMatch) {
-                return res.status(400).send({ errors: [{ msg: 'Invalid Credentials!' }] }) 
+                return res.status(400).send({ errors: [{ msg: 'Invalid Credentials!' }] })
             }
 
             jwt.sign(payload, config.get('jwtSecret'), { expiresIn: 360000 }, (err, token) => {
