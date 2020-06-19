@@ -107,7 +107,7 @@ router.get('/user/:user_id', async (req, res) => {
         if (error.kind == 'ObjectId') {
             return res.status(400).json({ msg: 'Profile not found!' });
         }
-        res.status(500).send('Server Error!')
+        res.status(500).send('Server Error!');
     }
 })
 
@@ -120,12 +120,59 @@ router.delete('/', auth, async (req, res) => {
         await Profile.findOneAndRemove({ user: req.user.id });
         // remove user
         await User.findOneAndRemove({ _id: req.user.id });
-        res.json({ msg: 'User deleted successfully!' })
+        res.json({ msg: 'User deleted successfully!' });
 
     } catch (error) {
         console.error(error.message);
-        res.status(500).send('Server Error!')
+        res.status(500).send('Server Error!');
     }
 })
+
+// @router      ADD api/profile/experience
+// @desc        Add experience field
+// @access      Private
+
+router.put('/experience', [auth, [check('title', 'Title is required!').not().isEmpty()
+    , check('company', 'Company is required!').not().isEmpty()
+    , check('from', 'From date is required!').not().isEmpty()]], async (req, res) => {
+
+        const errors = validationResult();
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        // pull out experience fields from request
+        const { title,
+            company,
+            location,
+            from,
+            to,
+            current,
+            description } = req.body;
+
+        // create object for newexp
+        const newExp = {
+            title,
+            company,
+            location,
+            from,
+            to,
+            current,
+            description
+        };
+
+        // profile in database
+        try {
+            const profile = await Profile.findOne({ user: req.user.id });
+            profile.experience.unshift(newExp);
+            await profile.save();
+            res.json(profile);
+
+        } catch (error) {
+            console.error(error.message);
+            res.status(500).send('Server Error!')
+        }
+
+    });
 
 module.exports = router;
