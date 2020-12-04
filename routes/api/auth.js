@@ -4,7 +4,8 @@ const router = express.Router();
 const User = require('../../models/User')
 const jwt = require('jsonwebtoken')
 const { check, validationResult } = require('express-validator');
-const brcrypt = require('bcrypt')
+const bcrypt = require('bcrypt')
+const config = require('config')
 
 // @router      GET api/auth
 // @desc        User Details using Token
@@ -47,18 +48,24 @@ router.post('/'
             }
 
             // Match passwords
-            const isMatch = await brcrypt.compare(password, user.password)
+            const isMatch = await bcrypt.compare(password, user.password)
             if (!isMatch) {
                 return res.status(400).send({ errors: [{ msg: 'Invalid Credentials!' }] })
             }
 
-            jwt.sign(payload, config.get('jwtSecret'), { expiresIn: 360000 }, (err, token) => {
+            const payload = {
+                user: {
+                    id: user.id
+                }
+            };
+
+            jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '5 days' }, (err, token) => {
                 if (err) throw err
                 res.json({ token })
-            })
+            });
 
-        } catch (error) {
-            console.error(error.message);
+        } catch (err) {
+            console.error(err.message);
             res.status(500).send('Server Error!');
         }
     });
