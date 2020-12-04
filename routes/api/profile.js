@@ -19,8 +19,8 @@ router.get('/me', auth, async (req, res) => {
         }
         res.json(profile)
 
-    } catch (error) {
-        console.error(error.message);
+    } catch (err) {
+        console.error(err.message);
         res.status(500).send('Server Error!')
     }
 });
@@ -75,8 +75,8 @@ router.post('/', [auth, [check('status', 'Status is required!').not().isEmpty()
             await profile.save();
             res.json(profile);
 
-        } catch (error) {
-            console.error(error.message);
+        } catch (err) {
+            console.error(err.message);
             res.status(500).send('Server Error!')
         }
 
@@ -89,8 +89,8 @@ router.get('/', async (req, res) => {
     try {
         const profiles = await Profile.find().populate('user', ['name', 'avatar']);
         res.json(profiles)
-    } catch (error) {
-        console.error(error.message);
+    } catch (err) {
+        console.error(err.message);
         res.status(500).send('Server Error!')
     }
 })
@@ -104,9 +104,9 @@ router.get('/user/:user_id', async (req, res) => {
         if (!profile) return res.status(400).json({ msg: 'Profile not found!' });
         res.json(profile);
 
-    } catch (error) {
-        console.error(error.message);
-        if (error.kind == 'ObjectId') {
+    } catch (err) {
+        console.error(err.message);
+        if (err.kind == 'ObjectId') {
             return res.status(400).json({ msg: 'Profile not found!' });
         }
         res.status(500).send('Server Error!');
@@ -124,8 +124,8 @@ router.delete('/', auth, async (req, res) => {
         await User.findOneAndRemove({ _id: req.user.id });
         res.json({ msg: 'User deleted successfully!' });
 
-    } catch (error) {
-        console.error(error.message);
+    } catch (err) {
+        console.error(err.message);
         res.status(500).send('Server Error!');
     }
 })
@@ -169,8 +169,8 @@ router.put('/experience', [auth, [check('title', 'Title is required!').not().isE
             await profile.save();
             res.json(profile);
 
-        } catch (error) {
-            console.error(error.message);
+        } catch (err) {
+            console.error(err.message);
             res.status(500).send('Server Error!')
         }
 
@@ -190,8 +190,8 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
         await profile.save();
         res.json(profile);
 
-    } catch (error) {
-        console.error(error.message);
+    } catch (err) {
+        console.error(err.message);
         res.status(500).send('Server Error!');
     }
 });
@@ -238,8 +238,8 @@ router.put('/education', [auth, [check('school', 'School is required!').not().is
             await profile.save();
             res.json(profile);
 
-        } catch (error) {
-            console.error(error.message);
+        } catch (err) {
+            console.error(err.message);
             res.status(500).send('Server Error!')
         }
 
@@ -258,8 +258,8 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
         await profile.save();
         res.json(profile);
 
-    } catch (error) {
-        console.error(error.message);
+    } catch (err) {
+        console.error(err.message);
         res.status(500).send('Server Error!');
     }
 });
@@ -287,8 +287,8 @@ router.get('/github/:username', (req, res) => {
             res.json(JSON.parse(body))
         })
 
-    } catch (error) {
-        console.error(error.message)
+    } catch (err) {
+        console.error(err.message)
         res.status(500).send('Server Error!');
     }
 })
