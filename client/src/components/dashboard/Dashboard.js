@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getCurrentProfile } from '../../actions/profile';
 import { Link } from 'react-router-dom';
+import DashboardActions from './DashboardActions';
 
 const Dashboard = ({ getCurrentProfile, auth: { user }, profile: { profile } }) => {
     useEffect(() => {
@@ -18,7 +19,7 @@ const Dashboard = ({ getCurrentProfile, auth: { user }, profile: { profile } }) 
             {
                 profile !== null ? (
                     <Fragment>
-                        Has profile!
+                        <DashboardActions />
                     </Fragment>
                 ) : (
                         <Fragment>
