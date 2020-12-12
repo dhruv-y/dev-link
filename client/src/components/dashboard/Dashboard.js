@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { getCurrentProfile } from '../../actions/profile';
 import { Link } from 'react-router-dom';
 import DashboardActions from './DashboardActions';
+import Education from './Education';
+import Experience from './Experience';
 
 const Dashboard = ({ getCurrentProfile, auth: { user }, profile: { profile } }) => {
     useEffect(() => {
@@ -20,6 +22,8 @@ const Dashboard = ({ getCurrentProfile, auth: { user }, profile: { profile } }) 
                 profile !== null ? (
                     <Fragment>
                         <DashboardActions />
+                        <Education education={profile.education} />
+                        <Experience experience={profile.experience} />
                     </Fragment>
                 ) : (
                         <Fragment>
