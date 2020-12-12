@@ -7,33 +7,39 @@ import DashboardActions from './DashboardActions';
 import Education from './Education';
 import Experience from './Experience';
 
-const Dashboard = ({ getCurrentProfile, auth: { user }, profile: { profile } }) => {
+const Dashboard = ({ getCurrentProfile, auth: { user }, profile: { profile, loading } }) => {
     useEffect(() => {
         getCurrentProfile()
     }, [])
 
     return (
         <Fragment>
-            <h1 className="large text-primary">Dashboard</h1>
-            <p className='lead'>
-                <i className='fas fa-user'></i>Welcome {user && user.name}
-            </p>
-            {
-                profile !== null ? (
+            {loading ? (
+                <h3>Loading...</h3>
+            ) : (
                     <Fragment>
-                        <DashboardActions />
-                        <Education education={profile.education} />
-                        <Experience experience={profile.experience} />
-                    </Fragment>
-                ) : (
-                        <Fragment>
-                            <p>You have not setup a profile yet! Pls add some info</p>
-                            <Link to='/create-profile' className='btn btn-primary my-1' >
-                                Create Profile
+                        <h1 className="large text-primary">Dashboard</h1>
+                        <p className='lead'>
+                            <i className='fas fa-user'></i>Welcome {user && user.name}
+                        </p>
+                        {
+                            profile !== null ? (
+                                <Fragment>
+                                    <DashboardActions />
+                                    <Education education={profile.education} />
+                                    <Experience experience={profile.experience} />
+                                </Fragment>
+                            ) : (
+                                    <Fragment>
+                                        <p>You have not setup a profile yet! Pls add some info</p>
+                                        <Link to='/create-profile' className='btn btn-primary my-1' >
+                                            Create Profile
                             </Link>
-                        </Fragment>
-                    )}
+                                    </Fragment>
+                                )}
 
+                    </Fragment>
+                )}
         </Fragment>
     )
 }
